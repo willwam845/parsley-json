@@ -11,6 +11,7 @@ object parser {
     private lazy val obj: Parsley[Value] = "{" ~> Object(members) <~ "}"
     private lazy val value = obj 
                            | arrayValue 
+                           | stringValue
                            | boolValue 
                            | nullValue 
                            | atomic(floatValue) 
@@ -19,6 +20,7 @@ object parser {
     private lazy val members = sepBy(member, ",")
     private lazy val member = Member(string <~ ":", value)
     private lazy val arrayValue: Parsley[Value] = "[" ~> ArrayValue(sepBy(value, ",")) <~ "]"
+    private lazy val stringValue = StringValue(string)
     private lazy val boolValue = BoolValue(("true" as true) | ("false" as false))
     private lazy val nullValue = "null" as NullValue
     private lazy val floatValue = FloatValue(float)
